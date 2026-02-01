@@ -7,7 +7,8 @@ import numpy as np
 # =====================================================
 # 基本の地図
 # =====================================================
-def plot_map(ax, lon_min, lon_max, lat_min, lat_max, color='black'):
+def plot_map(ax, lon_min, lon_max, lat_min, lat_max, color='black',lintx=None,linty=None,
+                fontsize=None,grid=None):
     
     """
     ax: matplotlib axis (Cartopy projection)
@@ -23,12 +24,30 @@ def plot_map(ax, lon_min, lon_max, lat_min, lat_max, color='black'):
     ax.set_extent([lon_min, lon_max, lat_min, lat_max])
     ax.coastlines(resolution='10m', lw=0.5)
     ax.add_feature(countries_10m, linestyle='dotted', linewidth=0.5, alpha=1.0)
-    gl = ax.gridlines(ccrs.PlateCarree(), draw_labels=True,
-       linewidth=1, linestyle=':')
-    gl.xlocator = mticker.FixedLocator(np.arange(-180, 181, 1))
-    gl.ylocator = mticker.FixedLocator(np.arange(-90, 91, 1))
-    gl.top_labels = False
-    gl.right_labels = False
+
+    #glidline option #add Feb 1 2026
+    if grid == 'on':
+
+        gl = ax.gridlines(ccrs.PlateCarree(), draw_labels=True,
+            linewidth=1, linestyle=':')
+        gl.xlocator = mticker.FixedLocator(np.arange(-180, 181, lintx))
+        gl.ylocator = mticker.FixedLocator(np.arange(-90, 91, linty))
+        gl.xlabel_style = {'size': fontsize}
+        gl.ylabel_style = {'size': fontsize}
+        gl.top_labels = False
+        gl.right_labels = False
+
+    else:
+        gl = ax.gridlines(ccrs.PlateCarree(), draw_labels=True)
+        gl.xlines = False
+        gl.ylines = False
+        gl.xlocator = mticker.FixedLocator(np.arange(-180, 180, lintx))
+        gl.ylocator = mticker.FixedLocator(np.arange(-90, 90, linty))
+        gl.xlabel_style = {'size': fontsize}
+        gl.ylabel_style = {'size': fontsize}
+        gl.top_labels = False
+        gl.right_labels = False
+
     return ax
 
 # =====================================================
